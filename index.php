@@ -28,6 +28,7 @@
         </style>
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script type="text/javascript">
+            // javascript function to display the webpage linked to the news item in the detail pane
             function load_rightpanel(itemURL) {
                 $("#include").html('<object data="'+itemURL+'" style="width:100%;height:100vh;">');
             }
@@ -51,42 +52,48 @@
                     </div>
 
                 <?php
+                    // getting RSSurl as parameter by a POST request
                     $RSSurl = $_POST['RSSurl'];
-                   
-                    function getFreshContent($RSSurl) {
-                        $html = "";
-                        
-                        function getFeed($url){
-                            $rss = simplexml_load_file($url);
 
-                            if (isset($rss->channel->image->url)){
-                                $html .= '<p align="center"><br><img src='.htmlspecialchars($rss->channel->image->url).'><br>';
-                            }
-                            $html .= '<b>'.htmlspecialchars($rss->channel->title).'</b><br>'.htmlspecialchars($rss->channel->description).'<hr></p>';
+                        // core function to read data from RSS feed and output the content in html format    
+                        function getFeedContent($url){
+
+                            $html = "";
+                            $rss = simplexml_load_file($url); // reading xml file from url
+
+                            if($rss ===  FALSE) // basic error handling
+                            {
+                                $html .= '<p align="center">Cannot read RSS feed: '.htmlspecialchars($url).'<br>Please check the url and try again.';
+                            } else {
+                                // get channel image url if present
+                                if (isset($rss->channel->image->url)){
+                                    $html .= '<p align="center"><br><img src='.htmlspecialchars($rss->channel->image->url).'><br>';
+                                }
+                                // get channel title and description
+                                $html .= '<b>'.htmlspecialchars($rss->channel->title).'</b><br>'.htmlspecialchars($rss->channel->description).'<hr></p>';
                            
-                            // $html .= '<ul>';
-                            foreach($rss->channel->item as $item) {
-                                $count++;
-                                if($count > 7){
-                                    break;
+                                foreach($rss->channel->item as $item) {
+                                    $count++; // read only the top 10 news items
+                                    if($count > 10){
+                                        break;
+                                    }
+                                    // show title and creating a javascript function with the link to load it into detail pane
+                                    $html .= '<div class="article"><a href="javascript:load_rightpanel(\''.htmlspecialchars($item->link).'\');">'.htmlspecialchars($item->title).'</a>';
+                                    // show author if exists
+                                    if (isset($item->author)){
+                                        $html .= '<br><i>'.htmlspecialchars($item->author).'</i>';
+                                    }
+                                    // show description and getting rid of html tags for cleaner output
+                                    $html .= '<br>'.strip_tags($item->description).'</div>';
                                 }
-                                $html .= '<div class="article"><a href="javascript:load_rightpanel(\''.htmlspecialchars($item->link).'\');">'.htmlspecialchars($item->title).'</a>';
-                                if (isset($item->author)){
-                                    $html .= '<br><i>'.htmlspecialchars($item->author).'</i>';
-                                }
-                                $html .= '<br>'.strip_tags($item->description).'</div>';
                             }
-                            // $html .= '</ul>';
+                            
                             return $html;
                         }
-                        $html .= getFeed($RSSurl);
-                        return $html;
-                    }
-
+                        
                     if (isset($RSSurl)){
-                        print getFreshContent($RSSurl);
+                        print getFeedContent($RSSurl);
                     }
-
                 ?>
                 </div>
 
