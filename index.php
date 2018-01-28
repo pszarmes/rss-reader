@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <style>
-            body { font-size: 170%; background-color: lightblue}
+            body { font-size: 150%; background-color: lightblue}
             a:visited { color: #a3bcd1; }
             .article {
               /*border: solid black 1px;*/
@@ -48,7 +48,7 @@
                                 </button>  
                                 </span>
                             </div>
-                        </form>&nbsp;example: http://feeds.bbci.co.uk/news/world/rss.xml
+                        </form><p align="center" style="color:gray;">http://feeds.bbci.co.uk/news/world/rss.xml
                     </div>
 
                 <?php
@@ -97,7 +97,7 @@
                 ?>
                 </div>
 
-                <div id="include" class="col-md-9"><img src="rss-reader-logo-icon.png" style="display:block;margin:0 auto;padding:30px"></div>
+                <div id="include" class="col-md-9"><img src="rss-reader-logo-icon.png" class="img-responsive" style="margin:0 auto;padding:20px;"></div>
             </div>   
         </div>
     </body>
